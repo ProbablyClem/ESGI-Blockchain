@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import useEth from "../../contexts/EthContext/useEth";
+import useEth from "../contexts/EthContext/useEth";
 
 function LivretFamille() {
   const {
@@ -127,17 +127,17 @@ function LivretFamille() {
       <div>
         <input
           type="text"
-          placeholder="Prenom"
+          placeholder="Prénom"
           value={prenom}
           onChange={(e) => setPrenom(e.target.value)}
         />
         <input
           type="text"
-          placeholder="Date naissance"
+          placeholder="Date de naissance"
           value={dateNaissance}
           onChange={(e) => setDateNaissance(e.target.value)}
         />
-        <label htmlFor="role-select">Choose a role:</label>
+        <label htmlFor="role-select">Choissisez un role: </label>
         <select
           name="role"
           id="role-select"
@@ -149,7 +149,7 @@ function LivretFamille() {
           <option value="2">Enfant</option>
         </select>
         <button type="button" onClick={addMember}>
-          Create
+          Créer
         </button>
       </div>
       <hr></hr>
@@ -162,7 +162,7 @@ function LivretFamille() {
           onChange={(e) => setIndexToDelete(e.target.value)}
         />
         <button type="button" onClick={deleteMember}>
-          Delete
+          Supprimer
         </button>
       </div>
     </div>
