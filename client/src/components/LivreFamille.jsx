@@ -12,6 +12,7 @@ function LivretFamille() {
   const [indexToDelete, setIndexToDelete] = useState("");
   const [prenomToSearch, setPrenomToSearch] = useState("");
   const [seachResult, setSearchResult] = useState({});
+  const [nom, setNom] = useState("");
 
   const getRoleName = (role) => {
     switch (role) {
@@ -115,77 +116,101 @@ function LivretFamille() {
   };
 
   return (
-    <div className="btns">
-      <h2>Membres</h2>
-      <ul>
+    <div className="p-4">
+      <h2 className="text-3xl font-bold mb-4">Membres</h2>
+      <ul className="space-y-2">
         {membres.map((membre, index) =>
           membre.prenom === "" ? null : (
-            <li key={index}>
-              {index} - Prénom : {membre.prenom}, Né le {membre.date_naissance},{" "}
-              {membre.roleName}
+            <li
+              key={index}
+              className="bg-success p-3 rounded-md shadow-md flex items-center space-x-2 text-primary-content"
+            >
+              <span className="font-medium">
+                {index + 1} - Prénom : {membre.prenom}, Né le{" "}
+                {membre.date_naissance}, {membre.roleName}
+              </span>
             </li>
           )
         )}
       </ul>
-      <hr></hr>
-      <h2>Ajouter un membre</h2>
-      <div>
+      <hr className="my-4" />
+      <h2 className="text-3xl font-bold mb-4">Ajouter un membre</h2>
+      <div className="flex space-x-4">
         <input
           type="text"
           placeholder="Prénom"
           value={prenom}
           onChange={(e) => setPrenom(e.target.value)}
+          className="w-1/3 p-2 rounded-md shadow-md"
         />
         <input
           type="text"
           placeholder="Date de naissance"
           value={dateNaissance}
           onChange={(e) => setDateNaissance(e.target.value)}
+          className="w-1/3 p-2 rounded-md shadow-md"
         />
-        <label htmlFor="role-select">Choissisez un role: </label>
+        <label htmlFor="role-select" className="text-sm self-center">
+          Choisissez un rôle :
+        </label>
         <select
           name="role"
           id="role-select"
           value={role}
           onChange={(e) => setRole(e.target.value)}
+          className="w-1/4 p-2 rounded-md shadow-md"
         >
           <option value="0">Parent 1</option>
           <option value="1">Parent 2</option>
           <option value="2">Enfant</option>
         </select>
-        <button type="button" onClick={addMember}>
+        <button
+          type="button"
+          onClick={addMember}
+          className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600"
+        >
           Créer
         </button>
       </div>
-      <hr></hr>
-      <h2>Supprimer un membre</h2>
-      <div>
+      <hr className="my-4" />
+      <h2 className="text-3xl font-bold mb-4">Supprimer un membre</h2>
+      <div className="flex space-x-4">
         <input
           type="text"
-          placeholder="index"
+          placeholder="Index"
           value={indexToDelete}
           onChange={(e) => setIndexToDelete(e.target.value)}
+          className="w-3/4 p-2 rounded-md shadow-md"
         />
-        <button type="button" onClick={deleteMember}>
+        <button
+          type="button"
+          onClick={deleteMember}
+          className="bg-red-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-600"
+        >
           Supprimer
         </button>
       </div>
-      <hr></hr>
-      <h2>Rechercher un membre</h2>
-      <div>
+      <hr className="my-4" />
+      <h2 className="text-3xl font-bold mb-4">Rechercher un membre</h2>
+      <div className="flex space-x-4">
         <input
           type="text"
-          placeholder="prénom"
+          placeholder="Prénom"
           value={prenomToSearch}
           onChange={(e) => setPrenomToSearch(e.target.value)}
+          className="w-3/4 p-2 rounded-md shadow-md"
         />
-        <button type="button" onClick={searchMember}>
+        <button
+          type="button"
+          onClick={searchMember}
+          className="bg-green-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-600"
+        >
           Rechercher
         </button>
       </div>
       <div>
         {seachResult.prenom === undefined ? null : (
-          <div>
+          <div className="bg-success text-primary-content p-3 rounded-md shadow-md mt-4">
             Prénom : {seachResult.prenom}, Né le {seachResult.date_naissance},{" "}
             {seachResult.roleName}
           </div>
