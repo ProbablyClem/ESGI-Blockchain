@@ -7,7 +7,7 @@ Clément Guiton, M2 Esgi AL
 
 Cette appication permet de deployer un smart contract de livret de famille, qui contient chacun des membres et leur role dans la famille.
 
-Le contrat est disponible ici : https://sepolia.etherscan.io/address/0x52d2f96d06564925d8132f425d912d27129b60e1#code
+Le contrat est disponible ici : https://sepolia.etherscan.io/address/0xC2b13988813B9A0FEEaa5ABb47A82E2e267B5Ce6#code
 
 ## Deployer le smart contract
 

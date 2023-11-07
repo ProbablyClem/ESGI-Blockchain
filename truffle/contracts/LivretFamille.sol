@@ -24,6 +24,7 @@ contract LivretFamille {
     }
 
     event addMemberEvent(address indexed _from, Personne _value);
+    event deleteMemberEvent(address indexed _from, Personne _value);
 
     function addMember(
         string calldata prenom,
@@ -43,6 +44,7 @@ contract LivretFamille {
 
     function deleteMember(uint index) public existMember(index) {
         Personne memory personne = membres[index];
+        emit deleteMemberEvent(msg.sender, personne);
         delete membresByPrenom[personne.prenom];
         delete membres[index];
         delete personne;

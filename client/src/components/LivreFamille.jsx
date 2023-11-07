@@ -10,6 +10,8 @@ function LivretFamille() {
   const [role, setRole] = useState(0);
   const [membres, setMembres] = useState([]);
   const [indexToDelete, setIndexToDelete] = useState("");
+  const [prenomToSearch, setPrenomToSearch] = useState("");
+  const [seachResult, setSearchResult] = useState({});
 
   const getRoleName = (role) => {
     switch (role) {
@@ -26,7 +28,7 @@ function LivretFamille() {
 
   useEffect(() => {
     const getList = async () => {
-      const value = await contract.methods
+      const value = await contract?.methods
         .getMembers()
         .call({ from: accounts[0] });
       setMembres([]);
@@ -41,6 +43,19 @@ function LivretFamille() {
       console.log(membres);
     };
     getList();
+
+    contract?.events.addMemberEvent({ fromBlock: 0 }, (error, event) => {
+      if (!error) {
+        console.log(event.returnValues._from, event.returnValues._value);
+        getList();
+      }
+    });
+    contract?.events.deleteMemberEvent({ fromBlock: 0 }, (error, event) => {
+      if (!error) {
+        console.log(event.returnValues._from, event.returnValues._value);
+        getList();
+      }
+    });
   }, [contract, accounts]);
 
   const addMember = async (e) => {
@@ -63,22 +78,6 @@ function LivretFamille() {
     await contract.methods
       .addMember(prenom, dateNaissance, role)
       .send({ from: accounts[0] });
-    const getList = async () => {
-      const value = await contract.methods
-        .getMembers()
-        .call({ from: accounts[0] });
-      setMembres([]);
-      value.forEach((membre) => {
-        let m = {
-          prenom: membre.prenom,
-          date_naissance: membre.date_naissance,
-          roleName: getRoleName(membre.role),
-        };
-        setMembres((membres) => [...membres, m]);
-      });
-      console.log(membres);
-    };
-    getList();
   };
 
   const deleteMember = async (e) => {
@@ -91,22 +90,28 @@ function LivretFamille() {
     }
     let index = parseInt(indexToDelete);
     await contract.methods.deleteMember(index).send({ from: accounts[0] });
-    const getList = async () => {
-      const value = await contract.methods
-        .getMembers()
-        .call({ from: accounts[0] });
-      setMembres([]);
-      value.forEach((membre) => {
-        let m = {
-          prenom: membre.prenom,
-          date_naissance: membre.date_naissance,
-          roleName: getRoleName(membre.role),
-        };
-        setMembres((membres) => [...membres, m]);
-      });
-      console.log(membres);
-    };
-    getList();
+  };
+
+  const searchMember = async (e) => {
+    if (e.target.tagName === "INPUT") {
+      return;
+    }
+    if (prenomToSearch === "") {
+      alert("Please enter a prenom.");
+      return;
+    }
+    const value = await contract.methods
+      .getMemberByPrenom(prenomToSearch)
+      .call({ from: accounts[0] });
+    if (value.prenom === "") {
+      alert("Aucun membres trouvé pour le prénom " + prenomToSearch);
+      return;
+    }
+    setSearchResult({
+      prenom: value.prenom,
+      date_naissance: value.date_naissance,
+      roleName: getRoleName(value.role),
+    });
   };
 
   return (
@@ -164,6 +169,27 @@ function LivretFamille() {
         <button type="button" onClick={deleteMember}>
           Supprimer
         </button>
+      </div>
+      <hr></hr>
+      <h2>Rechercher un membre</h2>
+      <div>
+        <input
+          type="text"
+          placeholder="prénom"
+          value={prenomToSearch}
+          onChange={(e) => setPrenomToSearch(e.target.value)}
+        />
+        <button type="button" onClick={searchMember}>
+          Rechercher
+        </button>
+      </div>
+      <div>
+        {seachResult.prenom === undefined ? null : (
+          <div>
+            Prénom : {seachResult.prenom}, Né le {seachResult.date_naissance},{" "}
+            {seachResult.roleName}
+          </div>
+        )}
       </div>
     </div>
   );
