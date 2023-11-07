@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import useEth from "../contexts/EthContext/useEth";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 function LivretFamille() {
   const {
     state: { contract, accounts },
   } = useEth();
   const [prenom, setPrenom] = useState("");
-  const [dateNaissance, setDateNaissance] = useState("");
+  const [dateNaissance, setDateNaissance] = useState(new Date());
   const [role, setRole] = useState(0);
   const [membres, setMembres] = useState([]);
   const [indexToDelete, setIndexToDelete] = useState("");
@@ -57,6 +59,13 @@ function LivretFamille() {
         getList();
       }
     });
+
+    contract?.methods
+      .nom()
+      .call({ from: accounts[0] })
+      .then((value) => {
+        setNom(value);
+      });
   }, [contract, accounts]);
 
   const addMember = async (e) => {
@@ -75,9 +84,10 @@ function LivretFamille() {
       alert("Please select a role.");
       return;
     }
-    console.log(prenom, dateNaissance, role);
+    let dateNaissanceFr = dateNaissance.toLocaleDateString("fr-FR");
+    console.log(prenom, dateNaissanceFr, role);
     await contract.methods
-      .addMember(prenom, dateNaissance, role)
+      .addMember(prenom, dateNaissanceFr, role)
       .send({ from: accounts[0] });
   };
 
@@ -117,6 +127,9 @@ function LivretFamille() {
 
   return (
     <div className="p-4">
+      <h1 class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+        Livret de famille : {nom}
+      </h1>
       <h2 className="text-3xl font-bold mb-4">Membres</h2>
       <ul className="space-y-2">
         {membres.map((membre, index) =>
@@ -143,13 +156,14 @@ function LivretFamille() {
           onChange={(e) => setPrenom(e.target.value)}
           className="w-1/3 p-2 rounded-md shadow-md"
         />
-        <input
-          type="text"
-          placeholder="Date de naissance"
-          value={dateNaissance}
-          onChange={(e) => setDateNaissance(e.target.value)}
-          className="w-1/3 p-2 rounded-md shadow-md"
+        <DatePicker
+          selected={dateNaissance}
+          onChange={(date) => setDateNaissance(date)}
+          dateFormat="dd/MM/yyy"
+          placeholderText="Date de naissance"
+          className="p-2 rounded-md shadow-md"
         />
+
         <label htmlFor="role-select" className="text-sm self-center">
           Choisissez un rôle :
         </label>
